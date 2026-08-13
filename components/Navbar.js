@@ -31,61 +31,64 @@ export default function Navbar() {
   }, [isOpen]);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-sky-dark/40 bg-white/90 backdrop-blur-sm shadow-sm">
-      <nav
-        className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 md:px-8"
-        aria-label="Primary"
-      >
-        <a href="#home" className="shrink-0" onClick={() => setIsOpen(false)}>
-          <Logo />
-        </a>
-
-        {/* Desktop menu */}
-        <ul className="hidden items-center gap-8 font-heading text-base font-medium text-foreground md:flex">
-          {NAV_LINKS.map((link) => (
-            <li key={link.href}>
-              <a
-                href={link.href}
-                className="transition-colors hover:text-pink-dark"
-              >
-                {link.label}
-              </a>
-            </li>
-          ))}
-        </ul>
-
-        <a
-          href="#flavours"
-          className="hidden rounded-full bg-pink px-5 py-2 font-heading text-sm font-semibold text-[#5a2e3a] shadow-sm transition-transform hover:scale-105 hover:bg-pink-dark md:inline-block"
+    <>
+      <header className="sticky top-0 z-50 border-b border-sky-dark/40 bg-white/90 backdrop-blur-sm shadow-sm">
+        <nav
+          className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 md:px-8"
+          aria-label="Primary"
         >
-          Explore Flavours
-        </a>
+          <a href="#home" className="shrink-0" onClick={() => setIsOpen(false)}>
+            <Logo />
+          </a>
 
-        {/* Hamburger button (mobile) */}
-        <button
-          type="button"
-          className="relative z-50 flex h-10 w-10 flex-col items-center justify-center gap-1.5 rounded-full bg-sky/60 md:hidden"
-          aria-label={isOpen ? "Close menu" : "Open menu"}
-          aria-expanded={isOpen}
-          aria-controls="mobile-drawer"
-          onClick={() => setIsOpen((prev) => !prev)}
-        >
-          <motion.span
-            className="h-0.5 w-5 rounded-full bg-sky-deep"
-            animate={isOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
-          />
-          <motion.span
-            className="h-0.5 w-5 rounded-full bg-sky-deep"
-            animate={isOpen ? { opacity: 0 } : { opacity: 1 }}
-          />
-          <motion.span
-            className="h-0.5 w-5 rounded-full bg-sky-deep"
-            animate={isOpen ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }}
-          />
-        </button>
-      </nav>
+          {/* Desktop menu */}
+          <ul className="hidden items-center gap-8 font-heading text-base font-medium text-foreground md:flex">
+            {NAV_LINKS.map((link) => (
+              <li key={link.href}>
+                <a
+                  href={link.href}
+                  className="transition-colors hover:text-pink-dark"
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
 
-      {/* Mobile drawer */}
+          <a
+            href="#flavours"
+            className="hidden rounded-full bg-pink px-5 py-2 font-heading text-sm font-semibold text-[#5a2e3a] shadow-sm transition-transform hover:scale-105 hover:bg-pink-dark md:inline-block"
+          >
+            Explore Flavours
+          </a>
+
+          {/* Hamburger button (mobile) */}
+          <button
+            type="button"
+            className="relative z-50 flex h-10 w-10 flex-col items-center justify-center gap-1.5 rounded-full bg-sky/60 md:hidden"
+            aria-label={isOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isOpen}
+            aria-controls="mobile-drawer"
+            onClick={() => setIsOpen((prev) => !prev)}
+          >
+            <motion.span
+              className="h-0.5 w-5 rounded-full bg-sky-deep"
+              animate={isOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
+            />
+            <motion.span
+              className="h-0.5 w-5 rounded-full bg-sky-deep"
+              animate={isOpen ? { opacity: 0 } : { opacity: 1 }}
+            />
+            <motion.span
+              className="h-0.5 w-5 rounded-full bg-sky-deep"
+              animate={isOpen ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }}
+            />
+          </button>
+        </nav>
+      </header>
+
+      {/* Mobile drawer — rendered outside <header> so its "fixed" positioning
+          isn't captured by the header's backdrop-blur containing block. */}
       <AnimatePresence>
         {isOpen && (
           <>
@@ -102,7 +105,7 @@ export default function Navbar() {
               role="dialog"
               aria-modal="true"
               aria-label="Mobile navigation"
-              className="fixed right-0 top-0 z-40 flex h-full w-72 flex-col gap-2 bg-sky px-6 pt-24 shadow-2xl md:hidden"
+              className="fixed right-0 top-0 z-40 flex h-full w-72 flex-col gap-2 bg-butter px-6 pt-24 shadow-2xl md:hidden"
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
@@ -129,6 +132,6 @@ export default function Navbar() {
           </>
         )}
       </AnimatePresence>
-    </header>
+    </>
   );
 }
