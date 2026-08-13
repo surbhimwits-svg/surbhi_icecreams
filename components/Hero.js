@@ -21,8 +21,8 @@ export default function Hero() {
           </span>
 
           <h1 className="mt-5 font-heading text-4xl font-bold leading-tight text-foreground sm:text-5xl md:text-6xl">
-            Scoops of Happiness,
-            <span className="text-pink-dark"> Made Fresh Daily!</span>
+            Surbhi&apos;s Projest For
+            <span className="text-pink-dark"> Icecreames</span>
           </h1>
 
           <p className="mx-auto mt-5 max-w-md font-body text-lg text-foreground/80 md:mx-0">
