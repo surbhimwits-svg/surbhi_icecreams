@@ -1,0 +1,17 @@
+<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="blueberry-title">
+  <title id="blueberry-title">A scoop of blueberry ice cream in a bowl, topped with fresh blueberries and a mint leaf</title>
+  <ellipse cx="150" cy="230" rx="105" ry="26" fill="#FFF3B0" />
+  <path d="M55 220 C55 260 245 260 245 220 L235 175 H65 Z" fill="#FFF9DC" />
+  <path d="M60 178 C60 240 240 240 240 178 C240 130 60 130 60 178 Z" fill="#7C6FC9" />
+  <path d="M75 170 C75 135 225 135 225 170 C225 195 190 168 150 168 C110 168 75 195 75 170 Z" fill="#9A8ED9" />
+  <g>
+    <circle cx="120" cy="155" r="13" fill="#4B3F94" />
+    <circle cx="150" cy="140" r="14" fill="#4B3F94" />
+    <circle cx="180" cy="158" r="12" fill="#4B3F94" />
+    <path d="M116 150 h8 M146 135 h8 M176 153 h8" stroke="#33285f" stroke-width="2" stroke-linecap="round" />
+    <circle cx="117" cy="152" r="2.4" fill="#c9c2ef" />
+    <circle cx="147" cy="137" r="2.6" fill="#c9c2ef" />
+    <circle cx="177" cy="155" r="2.4" fill="#c9c2ef" />
+  </g>
+  <path d="M180 128 c14 -10 28 -2 28 10 c0 10 -18 14 -28 4 c-4 8 -18 4 -16 -6 c2 -8 10 -8 16 -8 Z" fill="#8FE8B4" />
+</svg>

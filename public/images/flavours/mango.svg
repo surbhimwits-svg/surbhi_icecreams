@@ -1,0 +1,11 @@
+<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="mango-title">
+  <title id="mango-title">A scoop of mango ice cream in a bowl, topped with a mango slice</title>
+  <ellipse cx="150" cy="230" rx="105" ry="26" fill="#AEE1F9" />
+  <path d="M55 220 C55 260 245 260 245 220 L235 175 H65 Z" fill="#DDF0FC" />
+  <path d="M60 178 C60 240 240 240 240 178 C240 130 60 130 60 178 Z" fill="#FFC24B" />
+  <path d="M75 170 C75 135 225 135 225 170 C225 195 190 168 150 168 C110 168 75 195 75 170 Z" fill="#FFD97A" />
+  <path d="M150 118 c26 0 46 18 46 40 c0 22 -46 26 -46 4 c0 22 -46 18 -46 -4 c0 -22 20 -40 46 -40 Z" fill="#FF8A3D" />
+  <path d="M150 132 c14 0 24 10 24 22 c0 10 -24 14 -24 2 c0 12 -24 8 -24 -2 c0 -12 10 -22 24 -22 Z" fill="#FFE08A" />
+  <circle cx="105" cy="150" r="6" fill="#FFF3B0" />
+  <circle cx="195" cy="152" r="6" fill="#FFF3B0" />
+</svg>

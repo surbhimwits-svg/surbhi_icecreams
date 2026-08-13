@@ -1,0 +1,100 @@
+<svg viewBox="0 0 800 620" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="hero-title">
+  <title id="hero-title">Three colorful ice cream cones with sprinkles and a sunny sky</title>
+
+  <!-- Soft background washes -->
+  <circle cx="620" cy="120" r="150" fill="#FFF3B0" opacity="0.55" />
+  <circle cx="150" cy="450" r="170" fill="#AEE1F9" opacity="0.55" />
+  <circle cx="660" cy="470" r="90" fill="#BAF5D0" opacity="0.5" />
+
+  <!-- Sun -->
+  <circle cx="670" cy="90" r="46" fill="#FFF7DC" />
+  <circle cx="670" cy="90" r="46" fill="#FFE680" opacity="0.6" />
+
+  <!-- Floating sprinkles -->
+  <g stroke-linecap="round">
+    <rect x="90" y="90" width="18" height="6" rx="3" fill="#FF8FAC" transform="rotate(20 99 93)" />
+    <rect x="720" y="260" width="18" height="6" rx="3" fill="#5AA9D6" transform="rotate(-15 729 263)" />
+    <rect x="60" y="330" width="16" height="6" rx="3" fill="#8FE8B4" transform="rotate(40 68 333)" />
+    <circle cx="150" cy="150" r="7" fill="#FFE680" />
+    <circle cx="700" cy="420" r="8" fill="#FF8FAC" />
+    <circle cx="60" cy="230" r="6" fill="#AEE1F9" />
+    <circle cx="740" cy="150" r="6" fill="#BAF5D0" />
+  </g>
+
+  <!-- Left cone: mint scoop -->
+  <g>
+    <defs>
+      <clipPath id="cone-left">
+        <path d="M155 330 H255 L215 480 Q205 500 195 480 Z" />
+      </clipPath>
+    </defs>
+    <g clip-path="url(#cone-left)">
+      <rect x="145" y="330" width="120" height="180" fill="#FFE680" />
+      <g stroke="#F3C94D" stroke-width="3">
+        <line x1="140" y1="360" x2="270" y2="360" />
+        <line x1="140" y1="400" x2="270" y2="400" />
+        <line x1="140" y1="440" x2="270" y2="440" />
+        <line x1="160" y1="320" x2="220" y2="510" />
+        <line x1="195" y1="320" x2="255" y2="510" />
+      </g>
+    </g>
+    <circle cx="205" cy="300" r="58" fill="#BAF5D0" />
+    <path d="M160 292 C160 262 250 262 250 292 C250 320 185 316 185 336"
+          fill="none" stroke="#4fbf85" stroke-width="6" stroke-linecap="round" />
+    <circle cx="180" cy="270" r="6" fill="#FF8FAC" />
+    <circle cx="225" cy="260" r="6" fill="#FFF3B0" />
+  </g>
+
+  <!-- Center cone: butter scoop with cherry (tallest) -->
+  <g>
+    <defs>
+      <clipPath id="cone-center">
+        <path d="M335 350 H465 L415 545 Q400 568 385 545 Z" />
+      </clipPath>
+    </defs>
+    <g clip-path="url(#cone-center)">
+      <rect x="325" y="350" width="150" height="220" fill="#FFE680" />
+      <g stroke="#F3C94D" stroke-width="3.5">
+        <line x1="320" y1="385" x2="480" y2="385" />
+        <line x1="320" y1="430" x2="480" y2="430" />
+        <line x1="320" y1="475" x2="480" y2="475" />
+        <line x1="320" y1="520" x2="470" y2="520" />
+        <line x1="350" y1="340" x2="405" y2="570" />
+        <line x1="395" y1="340" x2="450" y2="570" />
+      </g>
+    </g>
+    <circle cx="400" cy="290" r="88" fill="#AEE1F9" />
+    <path d="M330 275 C330 225 470 225 470 275 C470 320 375 312 375 350 C375 372 430 368 430 340"
+          fill="none" stroke="#5AA9D6" stroke-width="8" stroke-linecap="round" />
+    <circle cx="360" cy="240" r="9" fill="#FF8FAC" />
+    <circle cx="430" cy="230" r="8" fill="#FFF3B0" />
+    <circle cx="450" cy="270" r="7" fill="#8FE8B4" />
+    <circle cx="365" cy="290" r="7" fill="#FFF7DC" />
+    <path d="M400 205 C400 190 415 182 415 182" fill="none" stroke="#4fbf85" stroke-width="4" stroke-linecap="round" />
+    <circle cx="400" cy="207" r="12" fill="#FF8FAC" />
+  </g>
+
+  <!-- Right cone: pink scoop -->
+  <g>
+    <defs>
+      <clipPath id="cone-right">
+        <path d="M545 340 H645 L605 490 Q595 510 585 490 Z" />
+      </clipPath>
+    </defs>
+    <g clip-path="url(#cone-right)">
+      <rect x="535" y="340" width="120" height="180" fill="#FFE680" />
+      <g stroke="#F3C94D" stroke-width="3">
+        <line x1="530" y1="370" x2="660" y2="370" />
+        <line x1="530" y1="410" x2="660" y2="410" />
+        <line x1="530" y1="450" x2="660" y2="450" />
+        <line x1="550" y1="330" x2="605" y2="520" />
+        <line x1="585" y1="330" x2="640" y2="520" />
+      </g>
+    </g>
+    <circle cx="595" cy="308" r="60" fill="#FFB6C9" />
+    <path d="M548 300 C548 268 642 268 642 300 C642 328 575 324 575 344"
+          fill="none" stroke="#ff6f95" stroke-width="6" stroke-linecap="round" />
+    <circle cx="572" cy="278" r="6" fill="#AEE1F9" />
+    <circle cx="618" cy="270" r="6" fill="#FFF3B0" />
+  </g>
+</svg>

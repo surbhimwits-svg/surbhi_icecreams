@@ -1,0 +1,54 @@
+<svg viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="about-title">
+  <title id="about-title">A smiling ice cream cone character surrounded by hearts and sprinkles</title>
+
+  <circle cx="300" cy="300" r="260" fill="#FFF3B0" opacity="0.6" />
+  <circle cx="300" cy="300" r="200" fill="#AEE1F9" opacity="0.55" />
+
+  <!-- Floating hearts & sprinkles -->
+  <path d="M120 160 c0-10 14-10 14 0 c0-10 14-10 14 0 c0 10-14 18-14 18 s-14-8-14-18Z" fill="#FF8FAC" />
+  <path d="M460 470 c0-8 11-8 11 0 c0-8 11-8 11 0 c0 8-11 14-11 14 s-11-6-11-14Z" fill="#FF8FAC" />
+  <circle cx="480" cy="160" r="8" fill="#8FE8B4" />
+  <circle cx="110" cy="440" r="8" fill="#5AA9D6" />
+  <rect x="440" y="296" width="16" height="6" rx="3" fill="#FFE680" transform="rotate(25 448 299)" />
+
+  <!-- Cone body -->
+  <defs>
+    <clipPath id="about-cone-clip">
+      <path d="M230 330 H370 L308 540 Q300 558 292 540 Z" />
+    </clipPath>
+  </defs>
+  <g clip-path="url(#about-cone-clip)">
+    <rect x="220" y="330" width="160" height="230" fill="#FFE680" />
+    <g stroke="#F3C94D" stroke-width="4">
+      <line x1="210" y1="365" x2="390" y2="365" />
+      <line x1="210" y1="410" x2="390" y2="410" />
+      <line x1="210" y1="455" x2="390" y2="455" />
+      <line x1="210" y1="500" x2="380" y2="500" />
+      <line x1="250" y1="320" x2="300" y2="565" />
+      <line x1="290" y1="320" x2="340" y2="565" />
+    </g>
+  </g>
+
+  <!-- Scoop with face -->
+  <circle cx="300" cy="255" r="120" fill="#AEE1F9" />
+  <path
+    d="M195 235 C195 165 405 165 405 235 C405 300 260 288 260 340 C260 372 340 366 340 328"
+    fill="none" stroke="#5AA9D6" stroke-width="10" stroke-linecap="round"
+  />
+
+  <!-- Face -->
+  <circle cx="262" cy="240" r="10" fill="#33323a" />
+  <circle cx="338" cy="240" r="10" fill="#33323a" />
+  <path d="M270 275 Q300 300 330 275" fill="none" stroke="#33323a" stroke-width="7" stroke-linecap="round" />
+  <circle cx="248" cy="262" r="10" fill="#FFB6C9" opacity="0.8" />
+  <circle cx="352" cy="262" r="10" fill="#FFB6C9" opacity="0.8" />
+
+  <!-- Sprinkles on scoop -->
+  <circle cx="230" cy="190" r="7" fill="#FF8FAC" />
+  <circle cx="370" cy="185" r="7" fill="#BAF5D0" />
+  <circle cx="300" cy="150" r="7" fill="#FFF7DC" />
+
+  <!-- Cherry -->
+  <path d="M300 130 C300 112 320 100 320 100" fill="none" stroke="#4fbf85" stroke-width="6" stroke-linecap="round" />
+  <circle cx="300" cy="135" r="16" fill="#FF8FAC" />
+</svg>
