@@ -2,6 +2,15 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import {
+  validateContactForm,
+  isHoneypotTriggered,
+  HONEYPOT_FIELD,
+  NAME_MAX_LENGTH,
+  EMAIL_MAX_LENGTH,
+  PHONE_MAX_LENGTH,
+  MESSAGE_MAX_LENGTH,
+} from "@/lib/validation";
 
 const SOCIAL_LINKS = [
   {
@@ -29,57 +38,36 @@ const SOCIAL_LINKS = [
   },
 ];
 
-const NAME_PATTERN = /^[A-Za-z][A-Za-z\s'.-]{1,49}$/;
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PHONE_PATTERN = /^(?:\+91[\s-]?)?[6-9]\d{9}$/;
-
-function validateForm(data) {
-  const errors = {};
-
-  const name = data.get("name").trim();
-  if (!name) {
-    errors.name = "Please enter your name.";
-  } else if (!NAME_PATTERN.test(name)) {
-    errors.name = "Name should only contain letters and be at least 2 characters.";
-  }
-
-  const email = data.get("email").trim();
-  if (!email) {
-    errors.email = "Please enter your email address.";
-  } else if (!EMAIL_PATTERN.test(email)) {
-    errors.email = "Please enter a valid email address.";
-  }
-
-  const phone = data.get("phone").trim();
-  if (!phone) {
-    errors.phone = "Please enter your phone number.";
-  } else if (!PHONE_PATTERN.test(phone)) {
-    errors.phone = "Please enter a valid 10-digit Indian mobile number.";
-  }
-
-  const message = data.get("message").trim();
-  if (!message) {
-    errors.message = "Please enter a message.";
-  } else if (message.length < 10) {
-    errors.message = "Message should be at least 10 characters.";
-  }
-
-  return errors;
-}
-
 export default function ContactUs() {
   const [status, setStatus] = useState("idle");
   const [errors, setErrors] = useState({});
+  const [messageLength, setMessageLength] = useState(0);
 
   async function handleSubmit(event) {
     event.preventDefault();
     const form = event.target;
     const data = new FormData(form);
-    const validationErrors = validateForm(data);
+
+    // Bots that auto-fill every field on the page will fill this one in;
+    // real visitors never see it. If it's populated, silently pretend the
+    // submission succeeded instead of hitting the API at all.
+    if (isHoneypotTriggered({ [HONEYPOT_FIELD]: data.get(HONEYPOT_FIELD) })) {
+      setStatus("submitted");
+      setErrors({});
+      form.reset();
+      return;
+    }
+
+    const { errors: validationErrors, isValid, values } = validateContactForm({
+      name: data.get("name"),
+      email: data.get("email"),
+      phone: data.get("phone"),
+      message: data.get("message"),
+    });
 
     setErrors(validationErrors);
 
-    if (Object.keys(validationErrors).length > 0) {
+    if (!isValid) {
       setStatus("invalid");
       return;
     }
@@ -90,13 +78,13 @@ export default function ContactUs() {
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: data.get("name"),
-          email: data.get("email"),
-          phone: data.get("phone"),
-          message: data.get("message"),
-        }),
+        body: JSON.stringify(values),
       });
+
+      if (response.status === 429) {
+        setStatus("rate-limited");
+        return;
+      }
 
       if (!response.ok) {
         throw new Error("Request failed");
@@ -104,6 +92,7 @@ export default function ContactUs() {
 
       setStatus("submitted");
       setErrors({});
+      setMessageLength(0);
       form.reset();
     } catch {
       setStatus("error");
@@ -133,9 +122,26 @@ export default function ContactUs() {
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.5 }}
             onSubmit={handleSubmit}
-            className="rounded-3xl bg-sky/20 p-6 shadow-sm sm:p-8"
+            className="relative rounded-3xl bg-sky/20 p-6 shadow-sm sm:p-8"
           >
             <div className="flex flex-col gap-5">
+              {/* Honeypot: invisible to sighted users and not reachable by
+                  keyboard/screen reader, but present for bots that blindly
+                  fill in every field. */}
+              <div
+                aria-hidden="true"
+                className="absolute -left-[9999px] top-auto h-px w-px overflow-hidden"
+              >
+                <label htmlFor={HONEYPOT_FIELD}>Leave this field empty</label>
+                <input
+                  id={HONEYPOT_FIELD}
+                  name={HONEYPOT_FIELD}
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                />
+              </div>
+
               <div>
                 <label
                   htmlFor="name"
@@ -148,6 +154,7 @@ export default function ContactUs() {
                   name="name"
                   type="text"
                   required
+                  maxLength={NAME_MAX_LENGTH}
                   autoComplete="name"
                   aria-invalid={Boolean(errors.name)}
                   aria-describedby={errors.name ? "name-error" : undefined}
@@ -173,6 +180,7 @@ export default function ContactUs() {
                   name="email"
                   type="email"
                   required
+                  maxLength={EMAIL_MAX_LENGTH}
                   autoComplete="email"
                   aria-invalid={Boolean(errors.email)}
                   aria-describedby={errors.email ? "email-error" : undefined}
@@ -198,6 +206,7 @@ export default function ContactUs() {
                   name="phone"
                   type="tel"
                   required
+                  maxLength={PHONE_MAX_LENGTH}
                   autoComplete="tel"
                   inputMode="tel"
                   aria-invalid={Boolean(errors.phone)}
@@ -213,17 +222,31 @@ export default function ContactUs() {
               </div>
 
               <div>
-                <label
-                  htmlFor="message"
-                  className="mb-1.5 block font-heading text-sm font-semibold text-foreground"
-                >
-                  Message
-                </label>
+                <div className="flex items-baseline justify-between">
+                  <label
+                    htmlFor="message"
+                    className="mb-1.5 block font-heading text-sm font-semibold text-foreground"
+                  >
+                    Message
+                  </label>
+                  <span
+                    aria-hidden="true"
+                    className={`font-body text-xs ${
+                      messageLength > MESSAGE_MAX_LENGTH
+                        ? "text-red-600"
+                        : "text-foreground/50"
+                    }`}
+                  >
+                    {messageLength}/{MESSAGE_MAX_LENGTH}
+                  </span>
+                </div>
                 <textarea
                   id="message"
                   name="message"
                   rows={4}
                   required
+                  maxLength={MESSAGE_MAX_LENGTH}
+                  onChange={(event) => setMessageLength(event.target.value.length)}
                   aria-invalid={Boolean(errors.message)}
                   aria-describedby={errors.message ? "message-error" : undefined}
                   className="w-full rounded-2xl border border-sky-dark/50 bg-white px-4 py-3 font-body text-foreground shadow-sm focus:border-sky-deep focus:outline-none focus:ring-2 focus:ring-sky-deep/40"
@@ -248,7 +271,7 @@ export default function ContactUs() {
                 role="status"
                 aria-live="polite"
                 className={`min-h-[1.5rem] font-body text-sm ${
-                  status === "invalid" || status === "error"
+                  status === "invalid" || status === "error" || status === "rate-limited"
                     ? "text-red-600"
                     : "text-[#2f7a54]"
                 }`}
@@ -259,6 +282,8 @@ export default function ContactUs() {
                   "Please fix the highlighted fields and try again."}
                 {status === "error" &&
                   "Something went wrong. Please try again in a moment."}
+                {status === "rate-limited" &&
+                  "You've submitted a few messages already — please wait a bit before sending another."}
               </p>
             </div>
           </motion.form>

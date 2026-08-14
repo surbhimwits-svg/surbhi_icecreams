@@ -13,10 +13,32 @@ const quicksand = Quicksand({
   weight: ["400", "500", "600", "700"],
 });
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+const TITLE = "Surbhi Icecreams | Scoops of Happiness, Made Fresh Daily";
+const DESCRIPTION =
+  "Handcrafted ice creams in flavors kids and families love. Real ingredients, real joy, in every scoop. Explore Mango, Vanilla, Butterscotch, Blueberry and more from Surbhi Icecreams.";
+
 export const metadata = {
-  title: "Surbhi Icecreams | Scoops of Happiness, Made Fresh Daily",
-  description:
-    "Handcrafted ice creams in flavors kids and families love. Real ingredients, real joy, in every scoop. Explore Mango, Vanilla, Butterscotch, Blueberry and more from Surbhi Icecreams.",
+  metadataBase: new URL(SITE_URL),
+  title: TITLE,
+  description: DESCRIPTION,
+  robots: {
+    index: true,
+    follow: true,
+  },
+  openGraph: {
+    title: TITLE,
+    description: DESCRIPTION,
+    url: SITE_URL,
+    siteName: "Surbhi Icecreams",
+    locale: "en_IN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: TITLE,
+    description: DESCRIPTION,
+  },
 };
 
 export default function RootLayout({ children }) {

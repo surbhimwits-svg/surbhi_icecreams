@@ -1,0 +1,13 @@
+-- Migration 0002 (OPTIONAL, destructive — review before running):
+--
+-- `users_messages` was an earlier scratch/test table created manually while
+-- prototyping. The application only ever reads/writes `contact_messages`
+-- (see app/api/contact/route.js). `users_messages` is unused, has no RLS
+-- policies (currently unreachable from the anon/public API), and its schema
+-- has known issues (UNIQUE(email) blocks legitimate repeat customers, no
+-- format checks). It is not part of the production data path.
+--
+-- Uncomment and run this ONLY after confirming (via the Supabase Table
+-- Editor) that `users_messages` contains no data you want to keep.
+
+-- drop table if exists public.users_messages;

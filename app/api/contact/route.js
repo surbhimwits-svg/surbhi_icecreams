@@ -1,58 +1,84 @@
 import { Resend } from "resend";
+import { createSupabaseClient } from "@/lib/supabase/client";
+import { validateContactForm, isHoneypotTriggered } from "@/lib/validation";
+import { checkRateLimit, getClientIp } from "@/lib/rateLimit";
 
-const NAME_PATTERN = /^[A-Za-z][A-Za-z\s'.-]{1,49}$/;
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PHONE_PATTERN = /^(?:\+91[\s-]?)?[6-9]\d{9}$/;
-
-function validate({ name, email, phone, message }) {
-  if (typeof name !== "string" || !NAME_PATTERN.test(name.trim())) {
-    return "Invalid name.";
-  }
-  if (typeof email !== "string" || !EMAIL_PATTERN.test(email.trim())) {
-    return "Invalid email address.";
-  }
-  if (typeof phone !== "string" || !PHONE_PATTERN.test(phone.trim())) {
-    return "Invalid phone number.";
-  }
-  if (typeof message !== "string" || message.trim().length < 10) {
-    return "Message is too short.";
-  }
-  return null;
+function logEvent(level, event, details) {
+  const line = { timestamp: new Date().toISOString(), level, event, ...details };
+  console[level === "error" ? "error" : "log"](JSON.stringify(line));
 }
 
 export async function POST(request) {
+  const ip = getClientIp(request);
+
+  const { allowed, retryAfterSeconds } = checkRateLimit(ip);
+  if (!allowed) {
+    logEvent("warn", "contact.rate_limited", { ip, retryAfterSeconds });
+    return Response.json(
+      { error: "Too many submissions. Please try again later." },
+      { status: 429, headers: { "Retry-After": String(retryAfterSeconds) } }
+    );
+  }
+
   let body;
   try {
     body = await request.json();
   } catch {
+    logEvent("warn", "contact.invalid_json", { ip });
     return Response.json({ error: "Invalid request body." }, { status: 400 });
   }
 
-  const { name, email, phone, message } = body ?? {};
-  const validationError = validate({ name, email, phone, message });
-  if (validationError) {
-    return Response.json({ error: validationError }, { status: 400 });
+  // Honeypot: a hidden field real visitors never see or fill in. Bots that
+  // auto-fill every input trip it. Respond as if it succeeded so the bot
+  // doesn't learn it was detected, but never save or email the submission.
+  if (isHoneypotTriggered(body)) {
+    logEvent("warn", "contact.honeypot_triggered", { ip });
+    return Response.json({ success: true }, { status: 200 });
   }
+
+  const { errors, isValid, values } = validateContactForm(body ?? {});
+  if (!isValid) {
+    logEvent("info", "contact.validation_failed", { ip, fields: Object.keys(errors) });
+    const firstError = Object.values(errors)[0];
+    return Response.json({ error: firstError, errors }, { status: 400 });
+  }
+
+  const supabase = createSupabaseClient();
+  const { error: dbError } = await supabase.from("contact_messages").insert(values);
+
+  if (dbError) {
+    logEvent("error", "contact.db_insert_failed", {
+      ip,
+      code: dbError.code,
+      message: dbError.message,
+    });
+    return Response.json(
+      { error: "Failed to save your message. Please try again." },
+      { status: 500 }
+    );
+  }
+
+  logEvent("info", "contact.saved", { ip, email: values.email });
 
   const resend = new Resend(process.env.RESEND_API_KEY);
 
   try {
-    const { error } = await resend.emails.send({
+    const { error: emailError } = await resend.emails.send({
       from: `Surbhi Icecreams Website <${process.env.RESEND_FROM_EMAIL}>`,
       to: process.env.ADMIN_NOTIFICATION_EMAIL,
-      replyTo: email.trim(),
-      subject: `New contact form message from ${name.trim()}`,
-      text: `Name: ${name.trim()}\nEmail: ${email.trim()}\nPhone: ${phone.trim()}\n\nMessage:\n${message.trim()}`,
+      replyTo: values.email,
+      subject: `New contact form message from ${values.name}`,
+      text: `Name: ${values.name}\nEmail: ${values.email}\nPhone: ${values.phone}\n\nMessage:\n${values.message}`,
     });
 
-    if (error) {
-      console.error("Resend error:", error);
-      return Response.json({ error: "Failed to send message." }, { status: 502 });
+    if (emailError) {
+      logEvent("error", "contact.email_failed", { ip, message: emailError.message });
+    } else {
+      logEvent("info", "contact.email_sent", { ip });
     }
-
-    return Response.json({ success: true }, { status: 200 });
-  } catch (error) {
-    console.error("Contact form send failed:", error);
-    return Response.json({ error: "Failed to send message." }, { status: 500 });
+  } catch (emailError) {
+    logEvent("error", "contact.email_threw", { ip, message: emailError.message });
   }
+
+  return Response.json({ success: true }, { status: 200 });
 }
