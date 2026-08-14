@@ -29,12 +29,85 @@ const SOCIAL_LINKS = [
   },
 ];
 
+const NAME_PATTERN = /^[A-Za-z][A-Za-z\s'.-]{1,49}$/;
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const PHONE_PATTERN = /^(?:\+91[\s-]?)?[6-9]\d{9}$/;
+
+function validateForm(data) {
+  const errors = {};
+
+  const name = data.get("name").trim();
+  if (!name) {
+    errors.name = "Please enter your name.";
+  } else if (!NAME_PATTERN.test(name)) {
+    errors.name = "Name should only contain letters and be at least 2 characters.";
+  }
+
+  const email = data.get("email").trim();
+  if (!email) {
+    errors.email = "Please enter your email address.";
+  } else if (!EMAIL_PATTERN.test(email)) {
+    errors.email = "Please enter a valid email address.";
+  }
+
+  const phone = data.get("phone").trim();
+  if (!phone) {
+    errors.phone = "Please enter your phone number.";
+  } else if (!PHONE_PATTERN.test(phone)) {
+    errors.phone = "Please enter a valid 10-digit Indian mobile number.";
+  }
+
+  const message = data.get("message").trim();
+  if (!message) {
+    errors.message = "Please enter a message.";
+  } else if (message.length < 10) {
+    errors.message = "Message should be at least 10 characters.";
+  }
+
+  return errors;
+}
+
 export default function ContactUs() {
   const [status, setStatus] = useState("idle");
+  const [errors, setErrors] = useState({});
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
-    setStatus("submitted");
+    const form = event.target;
+    const data = new FormData(form);
+    const validationErrors = validateForm(data);
+
+    setErrors(validationErrors);
+
+    if (Object.keys(validationErrors).length > 0) {
+      setStatus("invalid");
+      return;
+    }
+
+    setStatus("sending");
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: data.get("name"),
+          email: data.get("email"),
+          phone: data.get("phone"),
+          message: data.get("message"),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Request failed");
+      }
+
+      setStatus("submitted");
+      setErrors({});
+      form.reset();
+    } catch {
+      setStatus("error");
+    }
   }
 
   return (
@@ -76,9 +149,16 @@ export default function ContactUs() {
                   type="text"
                   required
                   autoComplete="name"
+                  aria-invalid={Boolean(errors.name)}
+                  aria-describedby={errors.name ? "name-error" : undefined}
                   className="w-full rounded-2xl border border-sky-dark/50 bg-white px-4 py-3 font-body text-foreground shadow-sm focus:border-sky-deep focus:outline-none focus:ring-2 focus:ring-sky-deep/40"
                   placeholder="Your name"
                 />
+                {errors.name && (
+                  <p id="name-error" className="mt-1.5 font-body text-sm text-red-600">
+                    {errors.name}
+                  </p>
+                )}
               </div>
 
               <div>
@@ -94,9 +174,42 @@ export default function ContactUs() {
                   type="email"
                   required
                   autoComplete="email"
+                  aria-invalid={Boolean(errors.email)}
+                  aria-describedby={errors.email ? "email-error" : undefined}
                   className="w-full rounded-2xl border border-sky-dark/50 bg-white px-4 py-3 font-body text-foreground shadow-sm focus:border-sky-deep focus:outline-none focus:ring-2 focus:ring-sky-deep/40"
                   placeholder="you@example.com"
                 />
+                {errors.email && (
+                  <p id="email-error" className="mt-1.5 font-body text-sm text-red-600">
+                    {errors.email}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label
+                  htmlFor="phone"
+                  className="mb-1.5 block font-heading text-sm font-semibold text-foreground"
+                >
+                  Phone Number
+                </label>
+                <input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  required
+                  autoComplete="tel"
+                  inputMode="tel"
+                  aria-invalid={Boolean(errors.phone)}
+                  aria-describedby={errors.phone ? "phone-error" : undefined}
+                  className="w-full rounded-2xl border border-sky-dark/50 bg-white px-4 py-3 font-body text-foreground shadow-sm focus:border-sky-deep focus:outline-none focus:ring-2 focus:ring-sky-deep/40"
+                  placeholder="+91 98765 43210"
+                />
+                {errors.phone && (
+                  <p id="phone-error" className="mt-1.5 font-body text-sm text-red-600">
+                    {errors.phone}
+                  </p>
+                )}
               </div>
 
               <div>
@@ -111,21 +224,41 @@ export default function ContactUs() {
                   name="message"
                   rows={4}
                   required
+                  aria-invalid={Boolean(errors.message)}
+                  aria-describedby={errors.message ? "message-error" : undefined}
                   className="w-full rounded-2xl border border-sky-dark/50 bg-white px-4 py-3 font-body text-foreground shadow-sm focus:border-sky-deep focus:outline-none focus:ring-2 focus:ring-sky-deep/40"
                   placeholder="Tell us what's on your mind..."
                 />
+                {errors.message && (
+                  <p id="message-error" className="mt-1.5 font-body text-sm text-red-600">
+                    {errors.message}
+                  </p>
+                )}
               </div>
 
               <button
                 type="submit"
-                className="mt-2 w-full rounded-full bg-pink px-6 py-3.5 font-heading text-lg font-semibold text-[#5a2e3a] shadow-md transition-transform hover:scale-105 hover:bg-pink-dark sm:w-auto sm:self-start"
+                disabled={status === "sending"}
+                className="mt-2 w-full rounded-full bg-pink px-6 py-3.5 font-heading text-lg font-semibold text-[#5a2e3a] shadow-md transition-transform hover:scale-105 hover:bg-pink-dark disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:scale-100 sm:w-auto sm:self-start"
               >
-                Send Message
+                {status === "sending" ? "Sending..." : "Send Message"}
               </button>
 
-              <p role="status" aria-live="polite" className="min-h-[1.5rem] font-body text-sm text-[#2f7a54]">
+              <p
+                role="status"
+                aria-live="polite"
+                className={`min-h-[1.5rem] font-body text-sm ${
+                  status === "invalid" || status === "error"
+                    ? "text-red-600"
+                    : "text-[#2f7a54]"
+                }`}
+              >
                 {status === "submitted" &&
                   "Thanks for reaching out! We'll get back to you soon."}
+                {status === "invalid" &&
+                  "Please fix the highlighted fields and try again."}
+                {status === "error" &&
+                  "Something went wrong. Please try again in a moment."}
               </p>
             </div>
           </motion.form>
