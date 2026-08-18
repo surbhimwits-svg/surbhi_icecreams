@@ -4,6 +4,7 @@ import AboutUs from "@/components/AboutUs";
 import Flavours from "@/components/Flavours";
 import ContactUs from "@/components/ContactUs";
 import Footer from "@/components/Footer";
+import OrderPopup from "@/components/OrderPopup";
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
         <ContactUs />
       </main>
       <Footer />
+      <OrderPopup />
     </>
   );
 }

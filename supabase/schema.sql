@@ -11,12 +11,15 @@ create table if not exists public.contact_messages (
     char_length(email) <= 150
     and email ~* '^[^\s@]+@[^\s@]+\.[^\s@]+$'
   ),
+  -- Exactly 10 digits, no country code/spaces/dashes (kept in sync with
+  -- lib/validation.js's PHONE_PATTERN).
   phone text not null check (
-    char_length(phone) <= 20
-    and phone ~ '^(\+91[- ]?)?[6-9][0-9]{4}[- ]?[0-9]{5}$'
+    phone ~ '^\d{10}$'
   ),
+  -- Message is optional at the application layer, so an empty string must
+  -- be allowed; only the upper bound is enforced.
   message text not null check (
-    char_length(trim(message)) between 10 and 2000
+    char_length(message) <= 2000
   ),
   created_at timestamptz not null default now()
 );
