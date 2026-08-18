@@ -1,3 +1,5 @@
+const isDev = process.env.NODE_ENV !== "production";
+
 const SECURITY_HEADERS = [
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "X-Frame-Options", value: "DENY" },
@@ -14,12 +16,16 @@ const SECURITY_HEADERS = [
     // 'unsafe-inline' on script-src is required because Next.js's own
     // hydration bootstrap runs via inline <script> tags; a stricter,
     // nonce-based policy would need middleware to mint a per-request nonce.
+    // 'unsafe-eval' is added only in development: Turbopack's HMR/React
+    // Refresh runtime and React's dev-mode debugging use eval() to
+    // evaluate updated modules, but React/webpack never call eval() in a
+    // production build, so production keeps the stricter policy without it.
     // Everything else here is fully locked down (no framing, no plugins,
     // no cross-origin form posts, no cross-origin fetch/XHR).
     key: "Content-Security-Policy",
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline'",
+      `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data:",
       "font-src 'self' data:",
