@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   validateContactForm,
   isHoneypotTriggered,
@@ -24,6 +25,7 @@ export default function ContactForm({
   loadingLabel = "Sending...",
   successMessage = DEFAULT_SUCCESS_MESSAGE,
 }) {
+  const router = useRouter();
   const [status, setStatus] = useState("idle");
   const [errors, setErrors] = useState({});
   const [messageLength, setMessageLength] = useState(0);
@@ -84,6 +86,7 @@ export default function ContactForm({
       setMessageLength(0);
       setPhone("");
       form.reset();
+      router.push("/thank-you");
     } catch {
       setStatus("error");
     }

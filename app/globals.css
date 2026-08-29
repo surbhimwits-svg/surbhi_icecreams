@@ -92,3 +92,24 @@ h4,
     display: none !important;
   }
 }
+
+@keyframes thank-you-pop {
+  from {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.thank-you-check {
+  animation: thank-you-pop 0.4s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .thank-you-check {
+    animation: none;
+  }
+}
