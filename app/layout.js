@@ -1,5 +1,6 @@
 import { Fredoka, Quicksand } from "next/font/google";
 import "./globals.css";
+import CursorFollower from "@/components/CursorFollower";
 
 const fredoka = Fredoka({
   variable: "--font-fredoka",
@@ -48,6 +49,7 @@ export default function RootLayout({ children }) {
       className={`${fredoka.variable} ${quicksand.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-white text-[#33323a]">
+        <CursorFollower />
         {children}
       </body>
     </html>
