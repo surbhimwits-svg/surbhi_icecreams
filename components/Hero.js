@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
 
 export default function Hero() {
@@ -37,12 +38,12 @@ export default function Hero() {
             >
               Explore Flavours
             </a>
-            <a
-              href="#about"
+            <Link
+              href="/about"
               className="w-full rounded-full border-2 border-sky-deep bg-white/70 px-8 py-3.5 text-center font-heading text-lg font-semibold text-sky-deep transition-transform hover:scale-105 hover:bg-white sm:w-auto"
             >
               Our Story
-            </a>
+            </Link>
           </div>
         </motion.div>
 

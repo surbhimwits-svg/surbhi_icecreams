@@ -2,33 +2,7 @@
 
 import { motion } from "framer-motion";
 import FlavourCard from "./FlavourCard";
-
-const FLAVOURS = [
-  {
-    name: "Mango",
-    description: "Rich, creamy, and bursting with real mango pulp.",
-    image: "/images/flavours/mango.svg",
-    bg: "bg-butter",
-  },
-  {
-    name: "Vanilla",
-    description: "Classic and smooth, with real vanilla bean flecks.",
-    image: "/images/flavours/vanilla.svg",
-    bg: "bg-sky",
-  },
-  {
-    name: "Butterscotch",
-    description: "Buttery caramel swirls with crunchy toffee bits.",
-    image: "/images/flavours/butterscotch.svg",
-    bg: "bg-butter",
-  },
-  {
-    name: "Blueberry",
-    description: "Sweet-tart blueberries in a velvety, fruity swirl.",
-    image: "/images/flavours/blueberry.svg",
-    bg: "bg-sky",
-  },
-];
+import { PRODUCTS } from "@/lib/products";
 
 export default function Flavours() {
   return (
@@ -48,15 +22,21 @@ export default function Flavours() {
         </div>
 
         <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {FLAVOURS.map((flavour, index) => (
+          {PRODUCTS.map((product, index) => (
             <motion.div
-              key={flavour.name}
+              key={product.id}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.5, delay: index * 0.08 }}
             >
-              <FlavourCard {...flavour} />
+              <FlavourCard
+                id={product.id}
+                name={product.name}
+                description={product.shortDescription}
+                image={product.image}
+                bg={product.bg}
+              />
             </motion.div>
           ))}
         </div>

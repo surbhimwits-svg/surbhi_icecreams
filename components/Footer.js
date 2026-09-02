@@ -1,9 +1,10 @@
+import Link from "next/link";
 import Logo from "./Logo";
 
 const QUICK_LINKS = [
-  { href: "#home", label: "Home" },
-  { href: "#about", label: "About Us" },
-  { href: "#contact", label: "Contact Us" },
+  { href: "/", label: "Home" },
+  { href: "/about", label: "About Us" },
+  { href: "/contact", label: "Contact Us" },
 ];
 
 const SOCIAL_LINKS = [
@@ -53,9 +54,9 @@ export default function Footer() {
           <ul className="flex flex-col items-center gap-1.5 font-body md:items-start">
             {QUICK_LINKS.map((link) => (
               <li key={link.href}>
-                <a href={link.href} className="hover:text-sky-deep">
+                <Link href={link.href} className="hover:text-sky-deep">
                   {link.label}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>

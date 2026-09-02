@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import Link from "next/link";
 import Logo from "./Logo";
 
 const NAV_LINKS = [
-  { href: "#home", label: "Home" },
-  { href: "#about", label: "About Us" },
-  { href: "#contact", label: "Contact Us" },
+  { href: "/", label: "Home" },
+  { href: "/about", label: "About Us" },
+  { href: "/contact", label: "Contact Us" },
 ];
 
 export default function Navbar() {
@@ -37,30 +38,30 @@ export default function Navbar() {
           className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 md:px-8"
           aria-label="Primary"
         >
-          <a href="#home" className="shrink-0" onClick={() => setIsOpen(false)}>
+          <Link href="/" className="shrink-0" onClick={() => setIsOpen(false)}>
             <Logo />
-          </a>
+          </Link>
 
           {/* Desktop menu */}
           <ul className="hidden items-center gap-8 font-heading text-base font-medium text-foreground md:flex">
             {NAV_LINKS.map((link) => (
               <li key={link.href}>
-                <a
+                <Link
                   href={link.href}
                   className="transition-colors hover:text-pink-dark"
                 >
                   {link.label}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
 
-          <a
-            href="#flavours"
+          <Link
+            href="/#flavours"
             className="hidden rounded-full bg-pink px-5 py-2 font-heading text-sm font-semibold text-[#5a2e3a] shadow-sm transition-transform hover:scale-105 hover:bg-pink-dark md:inline-block"
           >
             Explore Flavours
-          </a>
+          </Link>
 
           {/* Hamburger button (mobile) */}
           <button
@@ -112,22 +113,22 @@ export default function Navbar() {
               transition={{ type: "spring", stiffness: 260, damping: 28 }}
             >
               {NAV_LINKS.map((link) => (
-                <a
+                <Link
                   key={link.href}
                   href={link.href}
                   onClick={() => setIsOpen(false)}
                   className="rounded-2xl px-4 py-3 font-heading text-lg font-semibold text-[#2b4a5e] transition-colors hover:bg-white/60"
                 >
                   {link.label}
-                </a>
+                </Link>
               ))}
-              <a
-                href="#flavours"
+              <Link
+                href="/#flavours"
                 onClick={() => setIsOpen(false)}
                 className="mt-4 rounded-full bg-pink px-5 py-3 text-center font-heading text-base font-semibold text-[#5a2e3a] shadow-sm"
               >
                 Explore Flavours
-              </a>
+              </Link>
             </motion.div>
           </>
         )}

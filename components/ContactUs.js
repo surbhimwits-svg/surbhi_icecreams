@@ -35,14 +35,14 @@ export default function ContactUs() {
       <div className="mx-auto max-w-7xl px-4 md:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <span className="inline-block rounded-full bg-pink/40 px-4 py-1.5 font-heading text-sm font-semibold text-[#a13f5c]">
-            Contact Us
+            Send a Message
           </span>
           <h2 className="mt-4 font-heading text-3xl font-bold text-foreground sm:text-4xl">
-            We&apos;d Love to Hear From You
+            Fill In the Details Below
           </h2>
           <p className="mt-3 font-body text-lg text-foreground/75">
-            Questions, catering orders, or just want to say hi? Drop us a
-            message.
+            Our team typically responds within a day. You can also reach us
+            directly using the details alongside the form.
           </p>
         </div>
 
